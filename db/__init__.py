@@ -31,8 +31,30 @@ c.execute(
         name TEXT NOT NULL,
         chapter_id INTEGER NOT NULL,
         currently_studying BOOLEAN NOT NULL,
+        completed BOOLEAN NOT NULL,
         priority INTEGER NOT NULL,
         FOREIGN KEY(chapter_id) REFERENCES Chapters(id)
+    )
+    """
+)
+
+c.execute(
+    """
+    CREATE TABLE IF NOT EXISTS Days(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL
+    )
+    """
+)
+
+c.execute(
+    """
+    CREATE TABLE IF NOT EXISTS Times (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        from_hour INTEGER NOT NULL,
+        from_minute INTEGER NOT NULL,
+        day_id INTEGER NOT NULL,
+        FOREIGN KEY(day_id) REFERENCES Days(id)
     )
     """
 )
