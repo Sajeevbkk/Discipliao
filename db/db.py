@@ -583,3 +583,38 @@ def delete_time(time_id):
     finally:
         conn.commit()
         conn.close()
+
+# Joined
+def get_selected_topics(topic_ids):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        placeholders = ','.join('(?)' for _ in topic_ids)
+        cursor.execute(
+            f"""
+            WITH ids(id) AS (
+                VALUES {placeholders}
+            )
+            SELECT 
+                t.name AS topic_name,
+                c.name AS chapter_name,
+                s.name AS subject_name
+            FROM ids
+            LEFT JOIN Topics t ON ids.id = t.id
+            LEFT JOIN Chapters c ON t.chapter_id = c.id
+            LEFT JOIN Subjects s ON c.subject_id = s.id
+            """,
+            topic_ids
+        )
+        results = cursor.fetchall()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return []
+    else:
+        if not results:
+            print("No Topics Found")
+            return []
+        return results
+    finally:
+        conn.commit()
+        conn.close()
