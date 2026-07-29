@@ -1,4 +1,5 @@
 from db import db
+from datetime import time as time_obj
 
 def choose_subject():
     print("\nChoose a Subject:")
@@ -28,8 +29,7 @@ def choose_chapter(subject_id):
     print("\nChoose a Chapter:")
     chapters = db.get_chapters(subject_id)
 
-    if not chapters:
-        return None
+    if not chapters: return None
 
     chapter_ids = []
     for ch_id, chapter, _ in chapters:
@@ -98,3 +98,38 @@ def choose_day():
         return None
 
     return day_id
+
+def choose_time(day_id):
+    print("\nChoose Time:")
+    times = db.get_times(day_id)
+
+    if not times: return None
+
+    time_ids = []
+    for time in times:
+        f_time = (time_obj(time[1], time[2])).strftime("%I:%M%p")
+        print(f"\t{time[0]} - {f_time}")
+
+    try:
+        time_id = int(input("\nSelect Time ID: "))
+    except ValueError:
+        print("Time ID must be an integer!!\tOPERATION CANCELLED")
+        return None
+
+    if time_id not in time_ids:
+        print("Time ID is invalid!!\tOPERATION CANCELLED")
+        return None
+
+    return time_id
+
+def validate_priority(priority):
+    try:
+        priority = int(priority)
+    except ValueError:
+        print("Priority must be an integer!!\tOPERATION CANCELLED")
+        return None
+
+    if not (1 <= priority <= 10):
+        print("Priority must be between 1 and 10!!\tOPERATION CANCELLED!!")
+        return None
+    return priority

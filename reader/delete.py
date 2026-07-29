@@ -67,27 +67,6 @@ def delete_time():
     if not (day_id := helper.choose_day()): return
 
     # Choosing Timing
-    times = db.get_times(day_id)
-    if not times:
-        print("Add Times to Continue!!")
-        return
-
-    times_ids = []
-    print("\nTimes:")
-    for time in times:
-        # 0 - id, 1 - hour, 2 - minute
-        f_time = (time_obj(time[1], time[2])).strftime("%I:%M%p")
-        print(f"\t{time[0]} - {f_time}")
-        times_ids.append(time[0])
-
-    try:
-        time_id = int(input("\nEnter Time ID: "))
-    except ValueError:
-        print("Time ID must be an integer!!\tOPERATION CANCELLED!!")
-        return
-
-    if time_id not in times_ids:
-        print("Topic ID is invalid!!\tOPERATION CANCELLED!!")
-        return
+    if not (time_id := helper.choose_time(day_id)): return
 
     db.delete_time(time_id)

@@ -32,15 +32,10 @@ def add_input():
 
 def add_new_subject():
     subject = input("\nEnter Subject Name: ")
-    try:
-        priority = int(input("Enter Priority (1 - 10): "))
-    except ValueError:
-        print("Priority must be an integer!!\tOPERATION CANCELLED!!")
-        return
 
-    if not (1 <= priority <= 10):
-        print("Priority must be between 1 and 10!!\tOPERATION CANCELLED!!")
-        return
+    if not (priority := helper.validate_priority(
+            input("Enter Priority (1 - 10): ")
+    )): return
 
     db.add_subject(subject, priority)
 
@@ -49,7 +44,7 @@ def add_new_chapter():
     if not (subject_id := helper.choose_subject()): return
 
     chapter = input("\nEnter Chapter Name: ")
-    db.add_chapter(subject_id, chapter)
+    db.add_chapter(chapter, subject_id)
 
 def add_new_topic():
     # Choosing subject
@@ -67,19 +62,15 @@ def add_new_topic():
         print("Considering that as an NO")
         currently_studying = False
 
-    completed = input("\nDo you want to complete this topic? (Y/N): ")
+    completed = input("\nDo you completed this topic? (Y/N): ")
     if completed.lower() == "y": completed = True
     else:
         print("Considering that as an NO")
         completed = False
 
-    try:
-        priority = int(input("Enter Priority (1 - 10): "))
-    except ValueError:
-        print("Priority must be an integer!!\tOPERATION CANCELLED!!")
-        return
-    if not (1 <= priority <= 10):
-        print("Priority must be between 1 and 10!!\tOPERATION CANCELLED!!")
+    if not (priority := helper.validate_priority(
+            input("Enter Priority (1 - 10): ")
+    )): return
 
     db.add_topic(topic, chapter_id, currently_studying, completed, priority)
 

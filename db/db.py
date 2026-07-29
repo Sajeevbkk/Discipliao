@@ -5,6 +5,7 @@ def get_connection():
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
+# Subject
 def add_subject(name, priority):
     conn = get_connection()
     cursor = conn.cursor()
@@ -54,6 +55,66 @@ def get_subjects():
         conn.commit()
         conn.close()
 
+def get_subject(subject_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Subjects WHERE id = ?", (subject_id,))
+        subject = cursor.fetchone()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        if not subject:
+            print("No Subject Found")
+            return None
+        return subject
+    finally:
+        conn.commit()
+        conn.close()
+
+def get_subject_priority(topic_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Topics WHERE id = ?", (topic_id,))
+        if not (topic := cursor.fetchone()): return None
+        cursor.execute("SELECT * FROM Chapters WHERE id = ?", (topic[2],))
+        if not (chapter := cursor.fetchone()): return None
+        cursor.execute("SELECT * FROM Subjects WHERE id = ?", (chapter[2],))
+        if not (subject := cursor.fetchone()): return None
+    except sqlite3.IntegrityError:
+        print("Miss Configuration of Foreign Key")
+        return None
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        return subject[2]
+    finally:
+        conn.commit()
+        conn.close()
+
+def edit_subject(subject_id, name, priority):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE Subjects SET name = ?, priority = ? WHERE id = ?",
+            (name, priority, subject_id)
+        )
+    except Exception as e:
+        print(f"Database error: {e}")
+        return
+    else:
+        print("Subject Edited Successfully")
+    finally:
+        conn.commit()
+        conn.close()
+
 def delete_subject(subject_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -64,7 +125,7 @@ def delete_subject(subject_id):
         delete_chapter(chapter[0])
 
     try:
-        cursor.execute("DELETE FROM Subjects WHERE subject_id = ?", (subject_id,))
+        cursor.execute("DELETE FROM Subjects WHERE id = ?", (subject_id,))
     except Exception as e:
         print(f"Database error: {e}")
     else:
@@ -73,12 +134,15 @@ def delete_subject(subject_id):
         conn.commit()
         conn.close()
 
+# Chapter
 def add_chapter(name, subject_id):
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT * FROM Chapters WHERE name = ?", (name,))
+        cursor.execute("SELECT * FROM Chapters WHERE name = ? AND subject_id = ?",
+                       (name, subject_id)
+                       )
         chapter = cursor.fetchone()
 
         if chapter:
@@ -125,13 +189,49 @@ def get_chapters(subject_id):
         conn.commit()
         conn.close()
 
+def get_chapter(chapter_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Chapters WHERE id = ?", (chapter_id,))
+        chapter = cursor.fetchone()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        if not chapter:
+            print("No Chapter Found")
+            return None
+        return chapter
+    finally:
+        conn.commit()
+        conn.close()
+
+def edit_chapter(chapter_id, name):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "UPDATE Chapters SET name = ? WHERE id = ?", (name, chapter_id)
+        )
+    except Exception as e:
+        print(f"Database error: {e}")
+        return
+    else:
+        print("Chapter Edited Successfully")
+    finally:
+        conn.commit()
+        conn.close()
+
 def delete_chapter(chapter_id):
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
         cursor.execute("DELETE FROM Topics WHERE chapter_id = ?", (chapter_id,))
-        cursor.execute("DELETE FROM Chapters WHERE chapter_id = ?", (chapter_id,))
+        cursor.execute("DELETE FROM Chapters WHERE id = ?", (chapter_id,))
     except Exception as e:
         print(f"Database error: {e}")
         return
@@ -141,6 +241,7 @@ def delete_chapter(chapter_id):
         conn.commit()
         conn.close()
 
+# Topic
 def add_topic(name, chapter_id, currently_studying, completed, priority):
     conn = get_connection()
     cursor = conn.cursor()
@@ -153,7 +254,6 @@ def add_topic(name, chapter_id, currently_studying, completed, priority):
         if topic:
             if topic[3] == currently_studying:
                 print("Topic Already Exists with same Current Studying!!\tOPERATION CANCELLED!!")
-                return
             else:
                 print("Topic Already Exists (Updating Current Studying)")
                 cursor.execute(
@@ -163,7 +263,6 @@ def add_topic(name, chapter_id, currently_studying, completed, priority):
 
             if topic[4] == completed:
                 print("Topic Already Exists with Completed Status as same!!\tOPERATION CANCELLED!!")
-                return
             else:
                 print("Topic Already Exists (Updating Completed Status)")
                 cursor.execute(
@@ -173,7 +272,6 @@ def add_topic(name, chapter_id, currently_studying, completed, priority):
 
             if topic[5] == priority:
                 print("Topic Already Exists with same Priority!!\tOPERATION CANCELLED!!")
-                return
             else:
                 print("Topic Already Exists (Updating Priority)")
                 cursor.execute(
@@ -182,8 +280,8 @@ def add_topic(name, chapter_id, currently_studying, completed, priority):
                 )
         else:
             cursor.execute(
-                "INSERT INTO Topics (name, chapter_id, currently_studying, priority) VALUES (?, ?, ?, ?)",
-                (name, chapter_id, currently_studying, priority)
+                "INSERT INTO Topics (name, chapter_id, currently_studying, completed, priority) VALUES (?, ?, ?, ?, ?)",
+                (name, chapter_id, currently_studying, completed, priority)
             )
     except sqlite3.IntegrityError:
         print("Wrong Chapter ID!!\tOPERATION CANCELLED!!")
@@ -215,6 +313,68 @@ def get_topics(chapter_id):
         conn.commit()
         conn.close()
 
+def get_topic(topic_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Topics WHERE id = ?", (topic_id,))
+        topic = cursor.fetchone()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        if not topic:
+            print("No Topic Found")
+            return None
+        return topic
+    finally:
+        conn.commit()
+        conn.close()
+
+def get_active_topics():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Topics WHERE currently_studying = ?", (True,))
+        topics = cursor.fetchall()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return []
+    else:
+        if not topics:
+            print("No Active Topics Found")
+            return []
+        return topics
+    finally:
+        conn.commit()
+        conn.close()
+
+def edit_topic(topic_id, name, chapter_id, currently_studying, completed, priority):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            UPDATE Topics SET name = ?, chapter_id = ?, currently_studying = ?,
+            completed = ?, priority = ? WHERE id = ?
+            """,
+            (name, chapter_id, currently_studying, completed, priority, topic_id)
+        )
+    except sqlite3.IntegrityError:
+        print("Wrong Chapter ID!!\tOPERATION CANCELLED!!")
+        return
+    except Exception as e:
+        print(f"Database error: {e}")
+        return
+    else:
+        print("Topic Updated Successfully")
+    finally:
+        conn.commit()
+        conn.close()
+
 def delete_topic(topic_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -229,6 +389,7 @@ def delete_topic(topic_id):
         conn.commit()
         conn.close()
 
+# Day
 def add_day(name):
     conn = get_connection()
     cursor = conn.cursor()
@@ -274,6 +435,41 @@ def get_days():
         conn.commit()
         conn.close()
 
+def get_day(day_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Days WHERE id = ?", (day_id,))
+        day = cursor.fetchone()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        if not day:
+            print("No Days Found!!!\t", end="")
+            return None
+        return day
+    finally:
+        conn.commit()
+        conn.close()
+
+def edit_day(day_id, name):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+            "UPDATE Days SET name = ? WHERE id = ?", (name, day_id)
+        )
+    except Exception as e:
+        print(f"Database error: {e}")
+        return
+    else:
+        print("Day Updated Successfully")
+    finally:
+        conn.commit()
+        conn.close()
+
 def delete_day(day_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -290,6 +486,7 @@ def delete_day(day_id):
         conn.commit()
         conn.close()
 
+# Time
 def add_time(from_hour, from_minute, day_id):
     conn = get_connection()
     cursor = conn.cursor()
@@ -309,6 +506,8 @@ def add_time(from_hour, from_minute, day_id):
     except Exception as e:
         print(f"Database error: {e}")
         return
+    else:
+        print("Time Added Successfully")
     finally:
         conn.commit()
         conn.close()
@@ -328,6 +527,45 @@ def get_times(day_id):
             print("No Times Found")
             return []
         return times
+    finally:
+        conn.commit()
+        conn.close()
+
+def get_time(time_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT * FROM Times WHERE id = ?", (time_id,))
+        time = cursor.fetchone()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return None
+    else:
+        if not time:
+            print("No Times Found")
+            return None
+        return time
+    finally:
+        conn.commit()
+        conn.close()
+
+def edit_time(time_id, from_hour, from_minute):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            UPDATE Times SET from_hour = ?, from_minute = ? WHERE id = ?
+            """,
+            (from_hour, from_minute, time_id)
+        )
+    except Exception as e:
+        print(f"Database error: {e}")
+        return
+    else:
+        print("Time Updated Successfully")
     finally:
         conn.commit()
         conn.close()

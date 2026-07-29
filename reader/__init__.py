@@ -1,5 +1,7 @@
 from .add import add_input
 from .delete import delete_input
+from .edit import edit_input
+from .process import process_input
 
 def read_input():
     while True:
@@ -23,9 +25,11 @@ def read_input():
                 add_input()
             case 2:
                 pass
-                # Setup Edit
+                edit_input()
             case 3:
                 delete_input()
+            case 4:
+                process_input()
             case _:
                 print("Considering as Exit!!")
                 break
