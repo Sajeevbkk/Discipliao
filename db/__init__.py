@@ -6,7 +6,7 @@ c = conn.cursor()
 c.execute(
     """
     CREATE TABLE IF NOT EXISTS Subjects(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         name TEXT NOT NULL UNIQUE,
         priority INTEGER NOT NULL
     )
@@ -16,7 +16,7 @@ c.execute(
 c.execute(
     """
     CREATE TABLE IF NOT EXISTS Chapters(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         subject_id INTEGER NOT NULL,
         FOREIGN KEY(subject_id) REFERENCES Subjects(id)
@@ -27,7 +27,7 @@ c.execute(
 c.execute(
     """
     CREATE TABLE IF NOT EXISTS Topics(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
         chapter_id INTEGER NOT NULL,
         currently_studying BOOLEAN NOT NULL,
@@ -41,7 +41,7 @@ c.execute(
 c.execute(
     """
     CREATE TABLE IF NOT EXISTS Days(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         name TEXT NOT NULL
     )
     """
@@ -50,7 +50,7 @@ c.execute(
 c.execute(
     """
     CREATE TABLE IF NOT EXISTS Times (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         from_hour INTEGER NOT NULL,
         from_minute INTEGER NOT NULL,
         day_id INTEGER NOT NULL,

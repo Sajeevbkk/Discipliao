@@ -109,6 +109,7 @@ def choose_time(day_id):
     for time in times:
         f_time = (time_obj(time[1], time[2])).strftime("%I:%M%p")
         print(f"\t{time[0]} - {f_time}")
+        time_ids.append(time[0])
 
     try:
         time_id = int(input("\nSelect Time ID: "))
