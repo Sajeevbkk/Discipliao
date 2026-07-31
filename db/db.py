@@ -1,9 +1,55 @@
-import sqlite3
+import os
+import sys
+
+import psycopg
+
+connection_string = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost:5432/data")
+
+class _CursorWrapper:
+    def __init__(self, cursor):
+        self._cursor = cursor
+
+    @staticmethod
+    def _normalize_query(query):
+        return query.replace("?", "%s")
+
+    def execute(self, query, params=None):
+        if params is None:
+            return self._cursor.execute(query)
+        return self._cursor.execute(self._normalize_query(query), params)
+
+    def fetchone(self):
+        return self._cursor.fetchone()
+
+    def fetchall(self):
+        return self._cursor.fetchall()
+
+    def __getattr__(self, name):
+        return getattr(self._cursor, name)
+
+
+class _ConnectionWrapper:
+    def __init__(self, connection):
+        self._connection = connection
+
+    def cursor(self):
+        return _CursorWrapper(self._connection.cursor())
+
+    def commit(self):
+        return self._connection.commit()
+
+    def close(self):
+        return self._connection.close()
+
+    def __getattr__(self, name):
+        return getattr(self._connection, name)
+
 
 def get_connection():
-    conn = sqlite3.connect('data.db')
-    conn.execute("PRAGMA foreign_keys = ON")
-    return conn
+    try:
+        return _ConnectionWrapper(psycopg.connect(connection_string))
+    except psycopg.Error:
+        sys.exit("Database Connection Failed!!\tStopping Application!!")
 
 # Subject
 def add_subject(name, priority):
@@ -85,7 +131,7 @@ def get_subject_priority(topic_id):
         if not (chapter := cursor.fetchone()): return None
         cursor.execute("SELECT * FROM Subjects WHERE id = ?", (chapter[2],))
         if not (subject := cursor.fetchone()): return None
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Miss Configuration of Foreign Key")
         return None
     except Exception as e:
@@ -160,7 +206,7 @@ def add_chapter(name, subject_id):
                 "INSERT INTO Chapters (name, subject_id) VALUES (?, ?)",
                 (name, subject_id)
             )
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Wrong Subject ID!!\tOPERATION CANCELLED!!")
         return
     except Exception as e:
@@ -283,7 +329,7 @@ def add_topic(name, chapter_id, currently_studying, completed, priority):
                 "INSERT INTO Topics (name, chapter_id, currently_studying, completed, priority) VALUES (?, ?, ?, ?, ?)",
                 (name, chapter_id, currently_studying, completed, priority)
             )
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Wrong Chapter ID!!\tOPERATION CANCELLED!!")
         return
     except Exception as e:
@@ -363,7 +409,7 @@ def edit_topic(topic_id, name, chapter_id, currently_studying, completed, priori
             """,
             (name, chapter_id, currently_studying, completed, priority, topic_id)
         )
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Wrong Chapter ID!!\tOPERATION CANCELLED!!")
         return
     except Exception as e:
@@ -421,7 +467,7 @@ def get_days():
     try:
         cursor.execute("SELECT * FROM Days")
         days = cursor.fetchall()
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Wrong Day ID!!\tOPERATION CANCELLED!!")
         return []
     except Exception as e:
@@ -500,7 +546,7 @@ def add_time(from_hour, from_minute, day_id):
             """,
             (from_hour, from_minute, day_id)
         )
-    except sqlite3.IntegrityError:
+    except psycopg.IntegrityError:
         print("Wrong Day ID!!\tOPERATION CANCELLED!!")
         return
     except Exception as e:
