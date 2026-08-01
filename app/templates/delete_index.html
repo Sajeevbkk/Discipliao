@@ -1,33 +1,52 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Delete Items</h2>
-    <a href="{{ url_for('main.index') }}">Back to Home</a>
-    <h3>Subjects</h3>
-    <ul>
-        {% for subject in subjects %}
-            <li>
-                {{ subject[1] }}
-                <form method="POST" action="{{ url_for('delete.delete_subject', subject_id=subject[0]) }}" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure you want to delete this subject and all related chapters/topics?');">Delete</button>
-                </form> |
-                <a href="{{ url_for('delete.list_chapters', subject_id=subject[0]) }}">View Chapters to Delete</a>
-            </li>
-        {% else %}
-            <li>No subjects found.</li>
-        {% endfor %}
-    </ul>
-    <h3>Days</h3>
-    <ul>
-        {% for day in days %}
-            <li>
-                {{ day[1] }}
-                <form method="POST" action="{{ url_for('delete.delete_day', day_id=day[0]) }}" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure you want to delete this day and all related times?');">Delete</button>
-                </form> |
-                <a href="{{ url_for('delete.list_times', day_id=day[0]) }}">View Times to Delete</a>
-            </li>
-        {% else %}
-            <li>No days found.</li>
-        {% endfor %}
-    </ul>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0 h4">Delete Section</h2>
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-house"></i> Home</a>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('delete.delete_subject') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 text-danger">Delete Subjects</h5>
+                            <small class="text-muted">Remove subjects (Warning: cascades to chapters and topics)</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-danger"></i>
+                    </a>
+                    <a href="{{ url_for('delete.delete_list_chapters') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 text-danger">Delete Chapters</h5>
+                            <small class="text-muted">Remove chapters (Warning: cascades to topics)</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-danger"></i>
+                    </a>
+                    <a href="{{ url_for('delete.delete_list_topics') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 text-danger">Delete Topics</h5>
+                            <small class="text-muted">Remove specific topics</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-danger"></i>
+                    </a>
+                    <a href="{{ url_for('delete.delete_day') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 text-danger">Delete Days</h5>
+                            <small class="text-muted">Remove days (Warning: cascades to time slots)</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-danger"></i>
+                    </a>
+                    <a href="{{ url_for('delete.delete_list_times') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1 text-danger">Delete Time Slots</h5>
+                            <small class="text-muted">Remove specific time slots</small>
+                        </div>
+                        <i class="bi bi-chevron-right text-danger"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

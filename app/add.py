@@ -74,9 +74,10 @@ def add_topic():
 
         db.add_topic(name, chapter_id, currently_studying, completed, priority)
         flash('Topic added successfully!', 'success')
-        return redirect(url_for('add.index'))
+        return redirect(url_for('add.add_topic', subject_id=subject_id, chapter_id=chapter_id))
 
-    return render_template('add_topic.html', subjects=subjects, chapters=chapters, selected_subject_id=subject_id)
+    chapter_id = request.args.get('chapter_id') or request.form.get('chapter_id')
+    return render_template('add_topic.html', subjects=subjects, chapters=chapters, selected_subject_id=subject_id, selected_chapter_id=chapter_id)
 
 @add_bp.route('/day', methods=['GET', 'POST'])
 @login_required

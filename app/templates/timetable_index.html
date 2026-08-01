@@ -1,17 +1,52 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Create Time Table</h2>
-    <a href="{{ url_for('main.index') }}">Back to Home</a>
-    <form method="POST" action="">
-        <div>
-            <label for="day_id">Select Day:</label>
-            <select id="day_id" name="day_id" required>
-                <option value="">Select Day</option>
-                {% for day in days %}
-                    <option value="{{ day[0] }}">{{ day[1] }}</option>
-                {% endfor %}
-            </select>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0 h4">Generate Time Table</h2>
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-house"></i> Home</a>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('timetable.generate') }}">
+                    <div class="mb-4">
+                        <label class="form-label d-block fw-bold border-bottom pb-2">Select Days to Include:</label>
+                        <div class="row">
+                            {% for day in days %}
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="day_{{ day[0] }}" name="days" value="{{ day[0] }}" class="form-check-input" checked>
+                                        <label for="day_{{ day[0] }}" class="form-check-label">{{ day[1] }}</label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-12 text-muted fst-italic">No days configured. Add days first.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label d-block fw-bold border-bottom pb-2">Select Time Slots to Include:</label>
+                        <div class="row">
+                            {% for time in times %}
+                                <div class="col-md-4 mb-2">
+                                    <div class="form-check">
+                                        <input type="checkbox" id="time_{{ time[0] }}" name="times" value="{{ time[0] }}" class="form-check-input" checked>
+                                        <label for="time_{{ time[0] }}" class="form-check-label">{{ time[1] }}:{{ '%02d' % time[2] }} ({{ time[3] }})</label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-12 text-muted fst-italic">No time slots configured. Add time slots first.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-gear-fill"></i> Generate Schedule</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button type="submit">Generate</button>
-    </form>
+    </div>
+</div>
 {% endblock %}
