@@ -1,12 +1,24 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Edit Chapter</h2>
-    <a href="{{ url_for('edit.list_chapters', subject_id=chapter[2]) }}">Back</a>
-    <form method="POST" action="">
-        <div>
-            <label for="name">Chapter Name</label>
-            <input type="text" id="name" name="name" value="{{ chapter[1] }}" required>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0 h4">Edit Chapter</h2>
+                <a href="{{ url_for('edit.list_chapters', subject_id=chapter[2]) }}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left"></i> Back</a>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit.edit_chapter', chapter_id=chapter[0]) }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Chapter Name</label>
+                        <input type="text" id="name" name="name" class="form-control" value="{{ chapter[1] }}" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> Save Changes</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button type="submit">Update Chapter</button>
-    </form>
+    </div>
+</div>
 {% endblock %}

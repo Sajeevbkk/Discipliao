@@ -1,12 +1,52 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Add Items</h2>
-    <a href="{{ url_for('main.index') }}">Back to Home</a>
-    <ul>
-        <li><a href="{{ url_for('add.add_subject') }}">Add New Subject</a></li>
-        <li><a href="{{ url_for('add.add_chapter') }}">Add New Chapter</a></li>
-        <li><a href="{{ url_for('add.add_topic') }}">Add New Topic</a></li>
-        <li><a href="{{ url_for('add.add_day') }}">Add New Day</a></li>
-        <li><a href="{{ url_for('add.add_time') }}">Add New Timing</a></li>
-    </ul>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="mb-0 h4">Add Section</h2>
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary btn-sm"><i class="bi bi-house"></i> Home</a>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="{{ url_for('add.add_subject') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Add Subject</h5>
+                            <small class="text-muted">Create a new subject in your syllabus</small>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('add.add_chapter') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Add Chapter</h5>
+                            <small class="text-muted">Add chapters to your subjects</small>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('add.add_topic') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Add Topic</h5>
+                            <small class="text-muted">Add specific topics to study</small>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('add.add_day') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Add Day</h5>
+                            <small class="text-muted">Configure days for your timetable</small>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('add.add_time') }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Add Time Slot</h5>
+                            <small class="text-muted">Add available study times to specific days</small>
+                        </div>
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,17 +1,32 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Times in {{ day[1] }}</h2>
-    <a href="{{ url_for('delete.index') }}">Back</a>
-    <ul>
-        {% for time in times %}
-            <li>
-                {{ time[1] }}
-                <form method="POST" action="{{ url_for('delete.delete_time', time_id=time[0]) }}" style="display:inline;">
-                    <button type="submit" onclick="return confirm('Are you sure you want to delete this time?');">Delete</button>
-                </form>
-            </li>
-        {% else %}
-            <li>No times found.</li>
-        {% endfor %}
-    </ul>
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h2>Delete Time Slots for: {{ day[1] }}</h2>
+        <div>
+            <a href="{{ url_for('delete.index') }}" class="btn btn-secondary me-2"><i class="bi bi-arrow-left"></i> Back to Delete Menu</a>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-danger">
+    <div class="card-body p-0">
+        <div class="list-group list-group-flush">
+            {% for time in times %}
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1 text-danger">{{ time[1] }}</h5>
+                    </div>
+                    <form method="POST" action="{{ url_for('delete.delete_time', time_id=time[0]) }}" onsubmit="return confirm('Are you sure you want to delete this time slot?');">
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="bi bi-trash"></i> Delete</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="list-group-item text-muted fst-italic text-center py-4">
+                    No time slots found for this day.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

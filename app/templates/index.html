@@ -1,10 +1,48 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h2>Time Table App</h2>
-    <ul>
-        <li><a href="{{ url_for('add.index') }}">Add Items</a></li>
-        <li><a href="{{ url_for('edit.index') }}">Edit Items</a></li>
-        <li><a href="{{ url_for('delete.index') }}">Delete Items</a></li>
-        <li><a href="{{ url_for('timetable.index') }}">Get Time Table</a></li>
-    </ul>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header text-center">
+                <h1 class="mb-0">Welcome, {{ current_user.username }}!</h1>
+            </div>
+            <div class="card-body text-center">
+                <p class="lead">Manage your subjects, chapters, and topics. Generate a schedule that fits your needs.</p>
+                <a href="{{ url_for('timetable.index') }}" class="btn btn-primary btn-lg mt-2">
+                    <i class="bi bi-calendar3"></i> Generate Time Table
+                </a>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><i class="bi bi-plus-circle text-success mb-2" style="font-size: 2rem;"></i><br>Add Data</h3>
+                        <p class="card-text text-muted">Add new subjects, chapters, topics, days, and time slots.</p>
+                        <a href="{{ url_for('add.index') }}" class="btn btn-outline-success w-100">Go to Add</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><i class="bi bi-pencil-square text-warning mb-2" style="font-size: 2rem;"></i><br>Edit Data</h3>
+                        <p class="card-text text-muted">Update your existing subjects, chapters, topics, and schedule.</p>
+                        <a href="{{ url_for('edit.index') }}" class="btn btn-outline-warning w-100">Go to Edit</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><i class="bi bi-trash text-danger mb-2" style="font-size: 2rem;"></i><br>Delete Data</h3>
+                        <p class="card-text text-muted">Remove unneeded data from your syllabus and schedule.</p>
+                        <a href="{{ url_for('delete.index') }}" class="btn btn-outline-danger w-100">Go to Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
