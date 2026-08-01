@@ -16,11 +16,11 @@ def process_input():
 
 def create_table(day_id):
     if not (times := db.get_times(day_id)): return
-    if not (topics := db.get_active_topics()): return
+    if not (topics := db.get_active_topics_with_priorities()): return
 
     selected_topics = choices(
         topics,
-        [topic[5] + db.get_subject_priority(topic[0]) for topic in topics],
+        [topic[5] + (topic[6] if topic[6] is not None else 0) for topic in topics],
         k=len(times)
     )
 

@@ -83,6 +83,31 @@ def add_subject(name, priority):
         conn.commit()
         conn.close()
 
+def get_active_topics_with_priorities():
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT t.id, t.name, t.chapter_id, t.currently_studying, t.completed, t.priority, s.priority
+            FROM Topics t
+            LEFT JOIN Chapters c ON t.chapter_id = c.id
+            LEFT JOIN Subjects s ON c.subject_id = s.id
+            WHERE t.currently_studying = ?
+        """, (True,))
+        topics = cursor.fetchall()
+    except Exception as e:
+        print(f"Database error: {e}")
+        return []
+    else:
+        if not topics:
+            print("No Active Topics Found")
+            return []
+        return topics
+    finally:
+        conn.commit()
+        conn.close()
+
 def get_subjects():
     conn = get_connection()
     cursor = conn.cursor()
