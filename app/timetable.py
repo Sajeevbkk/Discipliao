@@ -22,7 +22,7 @@ def index():
             flash('No times found for the selected day.', 'warning')
             return redirect(url_for('timetable.index'))
 
-        topics = db.get_active_topics()
+        topics = db.get_active_topics_with_priorities()
         if not topics:
             flash('No active topics found.', 'warning')
             return redirect(url_for('timetable.index'))
@@ -30,10 +30,9 @@ def index():
         try:
             weights = []
             for topic in topics:
-                priority = db.get_subject_priority(topic[0])
-                if priority is None:
-                    priority = 0
-                weights.append(topic[5] + priority)
+                # topic[6] is the subject priority fetched in the JOIN query
+                subject_priority = topic[6] if topic[6] is not None else 0
+                weights.append(topic[5] + subject_priority)
 
             selected_topics_raw = choices(
                 topics,
