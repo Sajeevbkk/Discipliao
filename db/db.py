@@ -660,11 +660,11 @@ def get_selected_topics(topic_ids):
     conn = get_connection()
     cursor = conn.cursor()
     try:
-        placeholders = ','.join('(?)' for _ in topic_ids)
+        # Security enhancement: Use unnest with parameterized array to avoid SQL injection
         cursor.execute(
-            f"""
+            """
             WITH ids(id) AS (
-                VALUES {placeholders}
+                SELECT unnest(?::int[])
             )
             SELECT 
                 t.name AS topic_name,
@@ -675,7 +675,7 @@ def get_selected_topics(topic_ids):
             LEFT JOIN Chapters c ON t.chapter_id = c.id
             LEFT JOIN Subjects s ON c.subject_id = s.id
             """,
-            topic_ids
+            (topic_ids,)
         )
         results = cursor.fetchall()
     except Exception as e:
