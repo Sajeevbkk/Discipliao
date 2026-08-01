@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from db import db
+import psycopg
 
 class User(UserMixin):
     def __init__(self, id, username, password):
@@ -48,6 +49,8 @@ class User(UserMixin):
             user_id = cursor.fetchone()[0]
             conn.commit()
             return User(id=user_id, username=username, password=password)
+        except psycopg.errors.UniqueViolation:
+            print("Username already exists.")
         except Exception as e:
             print(f"Database error: {e}")
             conn.rollback()
