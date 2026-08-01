@@ -1,5 +1,4 @@
 from db import db
-from datetime import time as time_obj
 from reader import helper
 
 def delete_input():
