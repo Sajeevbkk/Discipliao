@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Edit Topic</h2>
+    <a href="{{ url_for('edit.list_topics', chapter_id=topic[2]) }}">Back</a>
+    <form id="subjectForm" method="POST" action="">
+        <input type="hidden" name="action" value="update_subject">
+        <div>
+            <label for="subject_id">Subject</label>
+            <select id="subject_id" name="subject_id" onchange="this.form.submit()" required>
+                <option value="">Select Subject</option>
+                {% for subject in subjects %}
+                    <option value="{{ subject[0] }}" {% if selected_subject_id|string == subject[0]|string %}selected{% endif %}>{{ subject[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+    {% if selected_subject_id %}
+    <form method="POST" action="">
+        <input type="hidden" name="action" value="update_topic">
+        <input type="hidden" name="subject_id" value="{{ selected_subject_id }}">
+        <div>
+            <label for="chapter_id">Chapter</label>
+            <select id="chapter_id" name="chapter_id" required>
+                <option value="">Select Chapter</option>
+                {% for chapter in chapters %}
+                    <option value="{{ chapter[0] }}" {% if topic[2]|string == chapter[0]|string %}selected{% endif %}>{{ chapter[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="name">Topic Name</label>
+            <input type="text" id="name" name="name" value="{{ topic[1] }}" required>
+        </div>
+        <div>
+            <label for="currently_studying">Currently Studying?</label>
+            <input type="checkbox" id="currently_studying" name="currently_studying" {% if topic[3] %}checked{% endif %}>
+        </div>
+        <div>
+            <label for="completed">Completed?</label>
+            <input type="checkbox" id="completed" name="completed" {% if topic[4] %}checked{% endif %}>
+        </div>
+        <div>
+            <label for="priority">Priority (1-10)</label>
+            <input type="number" id="priority" name="priority" value="{{ topic[5] }}" min="1" max="10" required>
+        </div>
+        <button type="submit">Update Topic</button>
+    </form>
+    {% endif %}
+{% endblock %}

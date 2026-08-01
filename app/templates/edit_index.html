@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Edit Items</h2>
+    <a href="{{ url_for('main.index') }}">Back to Home</a>
+    <h3>Subjects</h3>
+    <ul>
+        {% for subject in subjects %}
+            <li>
+                {{ subject[1] }}
+                <a href="{{ url_for('edit.edit_subject', subject_id=subject[0]) }}">Edit</a> |
+                <a href="{{ url_for('edit.list_chapters', subject_id=subject[0]) }}">View Chapters</a>
+            </li>
+        {% else %}
+            <li>No subjects found.</li>
+        {% endfor %}
+    </ul>
+    <h3>Days</h3>
+    <ul>
+        {% for day in days %}
+            <li>
+                {{ day[1] }}
+                <a href="{{ url_for('edit.edit_day', day_id=day[0]) }}">Edit</a> |
+                <a href="{{ url_for('edit.list_times', day_id=day[0]) }}">View Times</a>
+            </li>
+        {% else %}
+            <li>No days found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

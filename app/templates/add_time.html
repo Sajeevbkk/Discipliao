@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Add Timing</h2>
+    <a href="{{ url_for('add.index') }}">Back</a>
+    <form method="POST" action="">
+        <div>
+            <label for="day_id">Day</label>
+            <select id="day_id" name="day_id" required>
+                <option value="">Select Day</option>
+                {% for day in days %}
+                    <option value="{{ day[0] }}">{{ day[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="from_time">From Time</label>
+            <input type="time" id="from_time" name="from_time" required>
+        </div>
+        <button type="submit">Add Time</button>
+    </form>
+{% endblock %}

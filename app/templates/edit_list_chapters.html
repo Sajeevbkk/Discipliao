@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Chapters in {{ subject[1] }}</h2>
+    <a href="{{ url_for('edit.index') }}">Back</a>
+    <ul>
+        {% for chapter in chapters %}
+            <li>
+                {{ chapter[1] }}
+                <a href="{{ url_for('edit.edit_chapter', chapter_id=chapter[0]) }}">Edit</a> |
+                <a href="{{ url_for('edit.list_topics', chapter_id=chapter[0]) }}">View Topics</a>
+            </li>
+        {% else %}
+            <li>No chapters found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
