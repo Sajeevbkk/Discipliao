@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Times in {{ day[1] }}</h2>
+    <a href="{{ url_for('edit.index') }}">Back</a>
+    <ul>
+        {% for time in times %}
+            <li>
+                {{ time[1] }}
+                <a href="{{ url_for('edit.edit_time', time_id=time[0]) }}">Edit</a>
+            </li>
+        {% else %}
+            <li>No times found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

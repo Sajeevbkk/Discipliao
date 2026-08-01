@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Time Table (Day: {{ day_name }})</h2>
+    <a href="{{ url_for('timetable.index') }}">Back</a> | <a href="{{ url_for('main.index') }}">Home</a>
+    <table>
+        <thead>
+            <tr>
+                <th>TIME</th>
+                <th>TOPIC</th>
+                <th>CHAPTER</th>
+                <th>SUBJECT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in time_table %}
+                <tr>
+                    <td>{{ row.time }}</td>
+                    <td>{{ row.topic }}</td>
+                    <td>{{ row.chapter }}</td>
+                    <td>{{ row.subject }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

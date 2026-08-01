@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Add Items</h2>
+    <a href="{{ url_for('main.index') }}">Back to Home</a>
+    <ul>
+        <li><a href="{{ url_for('add.add_subject') }}">Add New Subject</a></li>
+        <li><a href="{{ url_for('add.add_chapter') }}">Add New Chapter</a></li>
+        <li><a href="{{ url_for('add.add_topic') }}">Add New Topic</a></li>
+        <li><a href="{{ url_for('add.add_day') }}">Add New Day</a></li>
+        <li><a href="{{ url_for('add.add_time') }}">Add New Timing</a></li>
+    </ul>
+{% endblock %}

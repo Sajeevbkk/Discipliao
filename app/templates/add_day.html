@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Add Day</h2>
+    <a href="{{ url_for('add.index') }}">Back</a>
+    <form method="POST" action="">
+        <div>
+            <label for="name">Day Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <button type="submit">Add Day</button>
+    </form>
+{% endblock %}

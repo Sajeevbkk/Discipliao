@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Topics in {{ chapter[1] }}</h2>
+    <a href="{{ url_for('edit.list_chapters', subject_id=chapter[2]) }}">Back to Chapters</a>
+    <ul>
+        {% for topic in topics %}
+            <li>
+                {{ topic[1] }}
+                <a href="{{ url_for('edit.edit_topic', topic_id=topic[0]) }}">Edit</a>
+            </li>
+        {% else %}
+            <li>No topics found.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

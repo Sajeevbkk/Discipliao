@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Create Time Table</h2>
+    <a href="{{ url_for('main.index') }}">Back to Home</a>
+    <form method="POST" action="">
+        <div>
+            <label for="day_id">Select Day:</label>
+            <select id="day_id" name="day_id" required>
+                <option value="">Select Day</option>
+                {% for day in days %}
+                    <option value="{{ day[0] }}">{{ day[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Generate</button>
+    </form>
+{% endblock %}
